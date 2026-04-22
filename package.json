@@ -1,0 +1,56 @@
+{
+    "name": "hb-web-api",
+    "version": "1.0.0",
+    "description": "Api For helesebygg web",
+    "main": "src/app.js",
+    "scripts": {
+        "start": "node -r dotenv/config src/app.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Minecat300/terrariaRecipeDB.git"
+    },
+    "keywords": [],
+    "author": "Minecat",
+    "license": "none",
+    "type": "module",
+    "bugs": {
+        "url": "https://github.com/Minecat300/terrariaRecipeDB/issues"
+    },
+    "homepage": "https://github.com/Minecat300/terrariaRecipeDB#readme",
+    "dependencies": {
+        "bcrypt": "^6.0.0",
+        "body-parser": "2.2.1",
+        "cookie-parser": "^1.4.7",
+        "cors": "2.8.5",
+        "dotenv": "^17.3.1",
+        "express": "5.1.0",
+        "jsonwebtoken": "^9.0.3",
+        "mysql2": "^3.18.1"
+    },
+    "installPath": "~/helsebygg/web/api",
+    "nginx": {
+        "service": {
+            "name": "helesebygg-web-api",
+            "port": 3868,
+            "uri": "",
+            "https": false,
+            "servers": ["localhost"]
+        },
+        "localhost": {
+            "urls": ["_"],
+            "certificate": "/etc/ssl/certs/selfsigned.crt",
+            "certificateKey": "/etc/ssl/private/selfsigned.key"
+        }
+    },
+    "pm2": {
+        "name": "helesebygg-web-api",
+        "file": "src/app.js"
+    },
+    "autoUpdate": {
+        "githubWebhook": {
+            "branch": ["main"],
+            "repo": "Minecat300/hb-web-api"
+        }
+    }
+}

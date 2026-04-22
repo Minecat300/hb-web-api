@@ -1,0 +1,29 @@
+import express from "express";
+
+import { register, login, logout, deleteAccount, getUserByUsername, deleteAccountByUsername, getUsers } from "../controllers/authController.js";
+import { authenticateToken, authorizeRole } from "../middleware/authMiddleware.js";
+
+const router = express.Router();
+
+//GET | localhost:3868/api/v1/auth/users
+router.get('/users', authenticateToken, authorizeRole('admin'), getUsers);
+
+//GET | localhost:3868/api/v1/auth/user/:username
+router.get('/user/:username', authenticateToken, authorizeRole('admin'), getUserByUsername);
+
+//DELETE | localhost:3868/api/v1/auth/user/:username
+router.delete('/user/:username', authenticateToken, authorizeRole('admin'), deleteAccountByUsername);
+
+//POST | localhost:3868/api/v1/auth/register
+router.post('/register', authenticateToken, authorizeRole('admin'), register);
+
+//POST | localhost:3868/api/v1/auth/login
+router.post('/login', login);
+
+//POST | localhost:3868/api/v1/auth/logout
+router.post('/logout', authenticateToken, logout);
+
+//DELETE | localhost:3868/api/v1/auth/delete
+router.delete('/delete', authenticateToken, authorizeRole('admin'), deleteAccount);
+
+export default router;

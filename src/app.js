@@ -16,9 +16,10 @@ const app = express();
 // Middlewares
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(cors({
-    origin: "*"
-}));
+// Disabled Cors for production
+// app.use(cors({
+//     origin: "*"
+// }));
 
 // setup Routes 
 

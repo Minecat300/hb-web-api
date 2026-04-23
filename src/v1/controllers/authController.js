@@ -65,7 +65,7 @@ export const login = async (req, res) => {
         res.cookie("token", token, {
             httpOnly: true,
             secure: true, // set true in production (HTTPS)
-            sameSite: "lax",
+            sameSite: "none",
             maxAge: 60 * 60 * 1000
         });
 
@@ -86,7 +86,7 @@ export const logout = (req, res) => {
     res.cookie("token", "", {
         httpOnly: true,
         secure: true, // set true in production (HTTPS)
-        sameSite: "lax",
+        sameSite: "none",
         expires: new Date(0)
     });
 
@@ -106,7 +106,7 @@ export const deleteAccount = async (req, res) => {
         res.clearCookie("token", {
             httpOnly: true,
             secure: true,
-            sameSite: "lax"
+            sameSite: "none"
         });
 
         return res.status(200).json({ message: "Account deleted" });

@@ -133,14 +133,17 @@ export async function fetchUsers() {
                 a.uuid,
                 a.email,
                 a.username,
-                GROUP_CONCAT(DISTINCT r.name) AS roles
+                COALESCE(GROUP_CONCAT(DISTINCT r.name), '') AS roles
              FROM ACCOUNT a
              LEFT JOIN ACCOUNT_ROLE ar ON ar.account_uuid = a.uuid
              LEFT JOIN ROLE r ON r.uuid = ar.role_uuid
              GROUP BY a.uuid, a.email, a.username;`
         );
 
-        return rows;
+        return rows.map(u => ({
+            ...u,
+            roles: u.roles ? u.roles.split(",") : []
+        }));
     } catch (error) {
         throw error;
     }

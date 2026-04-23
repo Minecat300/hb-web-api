@@ -33,7 +33,7 @@
         "service": {
             "name": "helesebygg-web-api",
             "port": 3868,
-            "uri": "",
+            "uri": "api/",
             "https": false,
             "servers": ["localhost"]
         },

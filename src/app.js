@@ -24,10 +24,10 @@ app.use(cookieParser());
 // setup Routes 
 
 //localhost:3868/api/v1/auth
-app.use('/api/v1/auth', authRoutes);
+app.use('/v1/auth', authRoutes);
 
 //localhost:3868/api/v1/notices
-app.use('/api/v1/notices', noticeRoutes);
+app.use('/v1/notices', noticeRoutes);
 
 app.listen(PORT, () => {
     console.log(`This HTTP app is running on port: ${PORT}`);

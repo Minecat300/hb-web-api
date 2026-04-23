@@ -126,19 +126,18 @@ export async function deleteUserById(userId) {
 
 export async function fetchUsers() {
     const pool = await getPool();
-    
+
     try {
         const [rows] = await pool.query(
             `SELECT 
                 a.uuid,
                 a.email,
                 a.username,
-                r.uuid AS role_uuid,
-                r.name AS role_name
+                GROUP_CONCAT(DISTINCT r.name) AS roles
              FROM ACCOUNT a
-             LEFT JOIN AUTH_CREDENTIAL ac ON ac.account_uuid = a.uuid
              LEFT JOIN ACCOUNT_ROLE ar ON ar.account_uuid = a.uuid
-             LEFT JOIN ROLE r ON r.uuid = ar.role_uuid;`
+             LEFT JOIN ROLE r ON r.uuid = ar.role_uuid
+             GROUP BY a.uuid, a.email, a.username;`
         );
 
         return rows;

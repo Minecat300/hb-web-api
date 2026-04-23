@@ -191,28 +191,34 @@ export const getUsers = async (req, res) => {
             return res.status(404).json({ error: "No users found" });
         }
 
-        const users = rows.map(row => ({
-            uuid: row.uuid,
-            email: row.email,
-            username: row.username,
-            createdAt: row.created_at,
-            updatedAt: row.updated_at,
-            roles: []
-        }));
-
-        const roleSet = new Set();
+        const userMap = new Map();
 
         for (const row of rows) {
-            if (row.role_name) {
-                roleSet.add(row.role_name);
+            if (!userMap.has(row.uuid)) {
+                userMap.set(row.uuid, {
+                    uuid: row.uuid,
+                    email: row.email,
+                    username: row.username,
+                    createdAt: row.created_at,
+                    updatedAt: row.updated_at,
+                    roles: []
+                });
+            }
+
+            if (row.roles) {
+                const roles = Array.isArray(row.roles)
+                    ? row.roles
+                    : row.roles.split(",");
+
+                for (const role of roles) {
+                    if (role && !userMap.get(row.uuid).roles.includes(role)) {
+                        userMap.get(row.uuid).roles.push(role);
+                    }
+                }
             }
         }
 
-        for (const user of users) {
-            user.roles = Array.from(roleSet);
-        }
-
-        return res.status(200).json(users);
+        return res.status(200).json(Array.from(userMap.values()));
 
     } catch (err) {
         console.error(err);

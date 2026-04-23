@@ -74,22 +74,42 @@ export async function fetchUser(username) {
                 a.email,
                 a.username,
                 ac.password_hash,
-                r.uuid AS role_uuid,
-                r.name AS role_name
+                a.created_at,
+                a.updated_at,
+                COALESCE(GROUP_CONCAT(DISTINCT r.name), '') AS roles
              FROM ACCOUNT a
              LEFT JOIN AUTH_CREDENTIAL ac ON ac.account_uuid = a.uuid
              LEFT JOIN ACCOUNT_ROLE ar ON ar.account_uuid = a.uuid
              LEFT JOIN ROLE r ON r.uuid = ar.role_uuid
-             WHERE a.username = ?;`,
+             WHERE a.username = ?
+             GROUP BY 
+                a.uuid,
+                a.email,
+                a.username,
+                ac.password_hash,
+                a.created_at,
+                a.updated_at;`,
             [username]
         );
 
-        return rows;
+        const user = rows[0];
+
+        if (!user) return null;
+
+        return {
+            uuid: user.uuid,
+            email: user.email,
+            username: user.username,
+            passwordHash: user.password_hash,
+            createdAt: user.created_at,
+            updatedAt: user.updated_at,
+            roles: user.roles ? user.roles.split(",") : []
+        };
+
     } catch (error) {
         throw error;
     }
 }
-
 export async function deleteUserById(userId) {
     const pool = await getPool();
 
@@ -133,17 +153,29 @@ export async function fetchUsers() {
                 a.uuid,
                 a.email,
                 a.username,
+                a.created_at,
+                a.updated_at,
                 COALESCE(GROUP_CONCAT(DISTINCT r.name), '') AS roles
              FROM ACCOUNT a
              LEFT JOIN ACCOUNT_ROLE ar ON ar.account_uuid = a.uuid
              LEFT JOIN ROLE r ON r.uuid = ar.role_uuid
-             GROUP BY a.uuid, a.email, a.username;`
+             GROUP BY 
+                a.uuid, 
+                a.email, 
+                a.username, 
+                a.created_at, 
+                a.updated_at`
         );
 
         return rows.map(u => ({
-            ...u,
+            uuid: u.uuid,
+            email: u.email,
+            username: u.username,
+            createdAt: u.created_at,
+            updatedAt: u.updated_at,
             roles: u.roles ? u.roles.split(",") : []
         }));
+
     } catch (error) {
         throw error;
     }

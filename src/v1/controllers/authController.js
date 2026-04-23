@@ -30,43 +30,32 @@ export const login = async (req, res) => {
     try {
         const { username, password } = req.body;
 
-        const rows = await fetchUser(username);
+        const user = await fetchUser(username);
 
-        if (!rows || rows.length === 0) {
+        if (!user) {
             return res.status(401).json({ error: "Invalid username or password" });
         }
 
-        const user = {
-            uuid: rows.uuid,
-            username: rows.username,
-            email: rows.email,
-            passwordHash: rows.passwordHash,
-            createdAt: rows.createdAt,
-            updatedAt: rows.updatedAt,
-            roles: []
-        };
-
-        const roleSet = new Set();
-        for (const row of rows) {
-            if (row.role_name) {
-                roleSet.add(row.role_name);
-            }
-        }
-        user.roles = Array.from(roleSet);
-
-        if (!user.passwordHash || !(await bcrypt.compare(password, user.passwordHash))) {
+        if (
+            !user.passwordHash ||
+            !(await bcrypt.compare(password, user.passwordHash))
+        ) {
             return res.status(401).json({ error: "Invalid username or password" });
         }
 
         const token = jwt.sign(
-            { uuid: user.uuid, username: user.username, roles: user.roles },
+            {
+                uuid: user.uuid,
+                username: user.username,
+                roles: user.roles
+            },
             SECRET_KEY,
             { expiresIn: "1h" }
         );
 
         res.cookie("token", token, {
             httpOnly: true,
-            secure: true, // set true in production (HTTPS)
+            secure: true,
             sameSite: "none",
             maxAge: 60 * 60 * 1000
         });

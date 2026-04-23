@@ -4,8 +4,6 @@ const host = '172.17.0.3';
 const user = 'user';
 const database = 'db';
 
-const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay));
-
 export async function getConnection() {
     const DB_PASSWORD = process.env.DB_PASSWORD;
 
@@ -21,24 +19,25 @@ export async function getConnection() {
     }
 }
 
-let pool;
+export async function getPool() {
 
-try {
-    await sleep(50);
+    let pool;
 
-    const DB_PASSWORD = process.env.DB_PASSWORD;
+    try {
+        const DB_PASSWORD = process.env.DB_PASSWORD;
 
-    pool = await mysql.createPool({
-        host,
-        user,
-        database,
-        password: DB_PASSWORD,
-        waitForConnections: true,
-        connectionLimit: 10,
-        queueLimit: 0
-    });
-} catch (error) {
-    console.log(error);
+        pool = await mysql.createPool({
+            host,
+            user,
+            database,
+            password: DB_PASSWORD,
+            waitForConnections: true,
+            connectionLimit: 10,
+            queueLimit: 0
+        });
+    } catch (error) {
+        console.log(error);
+    }
+
+    return pool;
 }
-
-export { pool };

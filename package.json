@@ -1,6 +1,6 @@
 {
     "name": "hb-web-api",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "description": "Api For helesebygg web",
     "main": "src/app.js",
     "scripts": {

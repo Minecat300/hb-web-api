@@ -1,9 +1,11 @@
-import { getConnection, pool } from "./db.js";
+import { getConnection, getPool } from "./db.js";
 import { randomUUID } from "crypto";
 
 export async function createUser(email, username, passwordHash, roles = []) {
     const accountId = randomUUID();
     const credentialId = randomUUID();
+
+    const pool = await getPool();
 
     const conn = await pool.getConnection();
     try {
@@ -63,6 +65,8 @@ export async function createUser(email, username, passwordHash, roles = []) {
 }
 
 export async function fetchUser(username) {
+    const pool = await getPool();
+
     try {
         const [rows] = await pool.query(
             `SELECT 
@@ -87,6 +91,8 @@ export async function fetchUser(username) {
 }
 
 export async function deleteUserById(userId) {
+    const pool = await getPool();
+
     const conn = await pool.getConnection();
 
     try {
@@ -119,6 +125,8 @@ export async function deleteUserById(userId) {
 }
 
 export async function fetchUsers() {
+    const pool = await getPool();
+    
     try {
         const [rows] = await pool.query(
             `SELECT 
@@ -140,6 +148,8 @@ export async function fetchUsers() {
 }
 
 export async function deleteUserByUsername(username) {
+    const pool = await getPool();
+
     const conn = await pool.getConnection();
 
     try {

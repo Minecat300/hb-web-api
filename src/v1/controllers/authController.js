@@ -37,10 +37,12 @@ export const login = async (req, res) => {
         }
 
         const user = {
-            uuid: rows[0].uuid,
-            username: rows[0].username,
-            email: rows[0].email,
-            passwordHash: rows[0].password_hash,
+            uuid: rows.uuid,
+            username: rows.username,
+            email: rows.email,
+            passwordHash: rows.passwordHash,
+            createdAt: rows.createdAt,
+            updatedAt: rows.updatedAt,
             roles: []
         };
 

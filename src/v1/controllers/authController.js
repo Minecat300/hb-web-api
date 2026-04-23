@@ -70,7 +70,10 @@ export const login = async (req, res) => {
         });
 
         return res.status(200).json({
-            message: "Logged in"
+            message: "Logged in",
+            username: user.username,
+            roles: user.roles,
+            uuid: user.uuid
         });
 
     } catch (err) {

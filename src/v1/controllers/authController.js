@@ -56,7 +56,7 @@ export const login = async (req, res) => {
         res.cookie("token", token, {
             httpOnly: true,
             secure: true,
-            sameSite: "none",
+            sameSite: "lax",
             maxAge: 60 * 60 * 1000
         });
 
@@ -77,7 +77,7 @@ export const logout = (req, res) => {
     res.cookie("token", "", {
         httpOnly: true,
         secure: true, // set true in production (HTTPS)
-        sameSite: "none",
+        sameSite: "lax",
         expires: new Date(0)
     });
 
@@ -97,7 +97,7 @@ export const deleteAccount = async (req, res) => {
         res.clearCookie("token", {
             httpOnly: true,
             secure: true,
-            sameSite: "none"
+            sameSite: "lax"
         });
 
         return res.status(200).json({ message: "Account deleted" });
@@ -149,18 +149,18 @@ export const getUserByUsername = async (req, res) => {
     }
 };
 
-export const deleteAccountByUsername = async (req, res) => {
-    const { username } = req.params;
+export const deleteAccountById = async (req, res) => {
+    const { uuid } = req.params;
 
-    if (!username) {
-        return res.status(400).json({ error: "Username required" });
+    if (!uuid) {
+        return res.status(400).json({ error: "UUID required" });
     }
 
     try {
-        await deleteUserByUsername(username);
+        await deleteUserById(uuid);
 
         return res.status(200).json({
-            message: `User '${username}' deleted`
+            message: `User '${uuid}' deleted`
         });
 
     } catch (err) {

@@ -82,7 +82,7 @@ export const NoticeController = {
 
     async countByMonthAndCategory(req, res) {
         try {
-            const { category, year, month } = req.query;
+            const { category, year, month } = req.body;
 
             if (!category || !year || !month) {
                 return res.status(400).json({

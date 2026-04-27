@@ -20,4 +20,10 @@ router.post('/token', authenticateToken, TokenController.createToken);
 //PUT | localhost:3868/api/v1/notices/:id/status
 router.put('/:id/status', authenticateToken, authorizeRole('admin', 'management'), NoticeController.updateStatus);
 
+//GET | localhost:3868/api/v1/notices/filter
+router.get("/notices/filter", authenticateToken, authorizeRole('admin', 'management'), NoticeController.getByMonthAndCategory);
+
+//GET | localhost:3868/api/v1/notices/count
+router.get("/notices/count", authenticateToken, authorizeRole('admin', 'management'), NoticeController.countByMonthAndCategory);
+
 export default router;

@@ -1,13 +1,14 @@
 import { getConnection } from './db.js';
 
 export const NoticeModel = {
-    async create({ uuid, title, description, topic, status }) {
+
+    async create({ uuid, title, description, category, status }) {
         const db = await getConnection();
         const [result] = await db.execute(
             `INSERT INTO NOTICE_OF_DEVIATION 
-            (uuid, title, description, topic, status)
-            VALUES (?, ?, ?, ?, ?)`,
-            [uuid, title, description, topic, status]
+            (uuid, title, description, category, status, created_at)
+            VALUES (?, ?, ?, ?, ?, NOW())`,
+            [uuid, title, description, category, status]
         );
         return result;
     },
@@ -39,6 +40,37 @@ export const NoticeModel = {
              VALUES (UUID(), ?, ?)`,
             [uuid, status]
         );
+    },
+
+    async getNoticesByMonthAndCategory(category, year, month) {
+        const db = await getConnection();
+
+        const [rows] = await db.query(
+            `SELECT *
+            FROM NOTICE_OF_DEVIATION
+            WHERE category = ?
+            AND YEAR(created_at) = ?
+            AND MONTH(created_at) = ?
+            ORDER BY created_at DESC`,
+            [category, year, month]
+        );
+
+        return rows;
+    },
+
+    async countNoticesByMonthAndCategory(category, year, month) {
+        const pool = await getPool();
+
+        const [rows] = await pool.query(
+            `SELECT COUNT(*) AS total
+            FROM NOTICE_OF_DEVIATION
+            WHERE category = ?
+            AND YEAR(created_at) = ?
+            AND MONTH(created_at) = ?`,
+            [category, year, month]
+        );
+
+        return rows[0]?.total || 0;
     }
 };
 

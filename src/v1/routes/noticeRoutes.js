@@ -21,9 +21,9 @@ router.post('/token', authenticateToken, TokenController.createToken);
 router.put('/:id/status', authenticateToken, authorizeRole('admin', 'management'), NoticeController.updateStatus);
 
 //GET | localhost:3868/api/v1/notices/filter
-router.get("/notices/filter", authenticateToken, authorizeRole('admin', 'management'), NoticeController.getByMonthAndCategory);
+router.get("/filter", authenticateToken, authorizeRole('admin', 'management'), NoticeController.getByMonthAndCategory);
 
 //GET | localhost:3868/api/v1/notices/count
-router.get("/notices/count", authenticateToken, authorizeRole('admin', 'management'), NoticeController.countByMonthAndCategory);
+router.get("/count", authenticateToken, authorizeRole('admin', 'management'), NoticeController.countByMonthAndCategory);
 
 export default router;

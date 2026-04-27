@@ -4,7 +4,7 @@ import { randomUUID } from "crypto";
 export const NoticeController = {
     async createNotice(req, res) {
         try {
-            const { title, description, topic, status } = req.body;
+            const { title, description, category, status } = req.body;
 
             const uuid = randomUUID();
 
@@ -12,7 +12,7 @@ export const NoticeController = {
                 uuid,
                 title,
                 description,
-                topic,
+                category,
                 status
             });
 
@@ -52,6 +52,52 @@ export const NoticeController = {
             await NoticeModel.updateStatus(req.params.id, status);
 
             res.status(200).json({ success: true });
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    },
+
+    async getByMonthAndCategory(req, res) {
+        try {
+            const { category, year, month } = req.query;
+
+            if (!category || !year || !month) {
+                return res.status(400).json({
+                    error: "category, year, and month are required"
+                });
+            }
+
+            const notices = await NoticeModel.getNoticesByMonthAndCategory(
+                category,
+                parseInt(year),
+                parseInt(month)
+            );
+
+            res.status(200).json(notices);
+
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    },
+
+    async countByMonthAndCategory(req, res) {
+        try {
+            const { category, year, month } = req.query;
+
+            if (!category || !year || !month) {
+                return res.status(400).json({
+                    error: "category, year, and month are required"
+                });
+            }
+
+            const total = await NoticeModel.countNoticesByMonthAndCategory(
+                category,
+                parseInt(year),
+                parseInt(month)
+            );
+
+            res.status(200).json({ total });
+
         } catch (err) {
             res.status(500).json({ error: err.message });
         }

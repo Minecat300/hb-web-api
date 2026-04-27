@@ -71,6 +71,19 @@ export const NoticeModel = {
         );
 
         return rows[0]?.total || 0;
+    },
+    async delete(uuid) {
+        const db = await getConnection();
+
+        await db.execute(
+            `DELETE FROM NOTICE_STATUS_HISTORY WHERE notice_uuid = ?`,
+            [uuid]
+        );
+
+        await db.execute(
+            `DELETE FROM NOTICE_OF_DEVIATION WHERE uuid = ?`,
+            [uuid]
+        );
     }
 };
 

@@ -24,7 +24,7 @@ router.post('/', authenticateToken, NoticeController.createNotice);
 router.get('/:id', authenticateToken, authorizeRole('admin', 'management'), NoticeController.getNoticeById);
 
 //DELETE | localhost:3868/api/v1/notices/:id
-router.delete('/:id', authenticateToken, authorizeRole('admin', 'management'), NoticeController.deleteNotice);
+router.delete('/:id', authenticateToken, authorizeRole('admin'), NoticeController.deleteNotice);
 
 //PUT | localhost:3868/api/v1/notices/:id/status
 router.put('/:id/status', authenticateToken, authorizeRole('admin', 'management'), NoticeController.updateStatus);

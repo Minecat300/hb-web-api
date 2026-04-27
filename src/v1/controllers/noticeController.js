@@ -101,6 +101,25 @@ export const NoticeController = {
         } catch (err) {
             res.status(500).json({ error: err.message });
         }
+    },
+
+    async deleteNotice(req, res) {
+        try {
+            const { id } = req.params;
+
+            const notice = await NoticeModel.getById(id);
+
+            if (!notice) {
+                return res.status(404).json({ error: "Notice not found" });
+            }
+
+            await NoticeModel.delete(id);
+
+            return res.status(200).json({ success: true });
+
+        } catch (err) {
+            return res.status(500).json({ error: err.message });
+        }
     }
 };
 

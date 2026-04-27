@@ -1,4 +1,4 @@
-import { getConnection } from './db.js';
+import { getConnection, getPool } from './db.js';
 
 export const NoticeModel = {
 
@@ -43,9 +43,9 @@ export const NoticeModel = {
     },
 
     async getNoticesByMonthAndCategory(category, year, month) {
-        const db = await getConnection();
+        const pool = await getPool();
 
-        const [rows] = await db.query(
+        const [rows] = await pool.query(
             `SELECT *
             FROM NOTICE_OF_DEVIATION
             WHERE category = ?
